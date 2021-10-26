@@ -114,6 +114,8 @@ pub fn packed_derive(input: TokenStream) -> TokenStream {
 enum Attr {
     Flag { name: Ident, span: Span },
     Value { name: Ident, value: Lit, span: Span },
+
+    #[allow(dead_code)]
     Lit { value: Lit, span: Span },
 }
 

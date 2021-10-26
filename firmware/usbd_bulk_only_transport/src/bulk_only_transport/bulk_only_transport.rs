@@ -447,23 +447,29 @@ impl<B: UsbBus> BulkOnlyTransport<'_, B> {
         // Get the csw ready to send
         self.pack_csw();
 
-        // We only send a zero length packet if the last write was a full packet AND we are sending
-        // less total bytes than the command header asked for
-        let needs_zlp = self.last_packet_full && 
-                        self.state == State::SendingDataToHost &&
-                        self.command_status_wrapper.data_residue > 0;
-
-
-        // send_zlp or flush are called here because we may not get an interrupt in a timley manner
-        // if we don't send immediately and
-        if needs_zlp {            
-            trace_bot_zlp!("ZLP> required");
-            self.change_state(State::NeedZlp);
-            self.send_zlp()?;
-        } else {
-            trace_bot_zlp!("ZLP> not required");
+        if cfg!(feature = "no-zlp") {
+            trace_bot_zlp!("ZLP> disabled");
             self.change_state(State::NeedToSendStatus);
             self.flush()?;
+        } else {
+            // We only send a zero length packet if the last write was a full packet AND we are sending
+            // less total bytes than the command header asked for
+            let needs_zlp = self.last_packet_full &&
+                            self.state == State::SendingDataToHost &&
+                            self.command_status_wrapper.data_residue > 0;
+
+
+            // send_zlp or flush are called here because we may not get an interrupt in a timley manner
+            // if we don't send immediately and
+            if needs_zlp {
+                trace_bot_zlp!("ZLP> required");
+                self.change_state(State::NeedZlp);
+                self.send_zlp()?;
+            } else {
+                trace_bot_zlp!("ZLP> not required");
+                self.change_state(State::NeedToSendStatus);
+                self.flush()?;
+            }
         }
 
         Ok(())

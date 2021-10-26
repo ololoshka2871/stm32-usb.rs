@@ -34,6 +34,9 @@ pub use read::*;
 mod report_luns;
 pub use report_luns::*;
 
+mod report_format_capacities;
+pub use report_format_capacities::*;
+
 mod request_sense;
 pub use request_sense::*;
 

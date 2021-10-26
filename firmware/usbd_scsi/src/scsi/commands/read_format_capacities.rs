@@ -4,6 +4,7 @@ use crate::scsi::{
     commands::Control,
 };
 
+// https://www.mikrocontroller.net/attachment/41812/0x23_READFMT_070123.pdf: Table 701
 #[derive(Clone, Copy, Eq, PartialEq, Debug, Packed)]
 #[packed(big_endian, lsb0)]
 pub struct ReadFormatCapacitiesCommand {
@@ -16,7 +17,7 @@ pub struct ReadFormatCapacitiesCommand {
     #[pkd(7, 0, 7, 8)]
     pub allocation_length: u16,
     
-    #[pkd(7, 0, 11, 11)]
+    #[pkd(7, 0, 9, 9)]
     pub control: Control,
 }
 impl ParsePackedStruct for ReadFormatCapacitiesCommand {}

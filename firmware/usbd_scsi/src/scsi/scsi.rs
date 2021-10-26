@@ -235,6 +235,22 @@ impl<B: UsbBus, BD: BlockDevice> Scsi<'_, B, BD> {
                 }
             },
 
+            // get disc tormatting configuration : https://www.embedders.org/node/188?page=0,7
+            Command::ReadFormatCapacities(s) => {
+                trace_scsi_fs!("FS> Read Format capacities: alloc-len: {}", s.allocation_length);
+
+                let capacities = FormatingCapacities::new(
+                    self.block_device.max_lba(),
+                    BD::BLOCK_BYTES
+                );
+
+                let buf = self.inner.take_buffer_space(FormatingCapacities::BYTES)?;
+
+                capacities.pack(buf)?;
+
+                Done
+            },
+
             _ => Err(Error::UnhandledOpCode)?,
         })
     }
