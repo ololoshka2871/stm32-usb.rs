@@ -37,3 +37,4 @@ trace-all           = [ "trace-bot-headers", "trace-bot-states", "trace-bot-byte
                         "trace-bot-zlp", "trace-bot-buffer", "trace-scsi-command", 
                         "trace-scsi-fs", "trace-usb-control" ]
 no-zlp              = [ "usbd_bulk_only_transport/no-zlp" ]
+direct-read-hack    = [ "usbd_bulk_only_transport/direct-read-hack" ]

@@ -19,3 +19,6 @@ mod logging {
     #[cfg(not(feature = "trace-scsi-fs"))]
     pub use itm_logger::stub as trace_scsi_fs;
 }
+
+#[cfg(feature = "direct-read-hack")]
+pub use usbd_bulk_only_transport::direct_read;

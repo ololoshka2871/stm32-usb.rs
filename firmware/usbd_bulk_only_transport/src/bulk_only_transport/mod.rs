@@ -16,3 +16,6 @@ pub use bulk_only_transport::{
     TransferState,
     Error,
 };
+
+#[cfg(feature = "direct-read-hack")]
+pub mod direct_read;

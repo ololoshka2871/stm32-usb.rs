@@ -391,7 +391,23 @@ impl<B: UsbBus> BulkOnlyTransport<'_, B> {
 
             let end = start + len;
 
-            let bytes = self.inner.write_packet(&self.buffer[start..end])?;
+            let bytes = if cfg!(feature = "direct-read-hack") {
+                let dah = unsafe { 
+                    crate::direct_read::DirectReadHack::deserialise_ptr(
+                        self.buffer.as_ptr(), self.buffer.len())? 
+                };
+                
+                if dah.is_valid() {
+                    let buf = unsafe { 
+                        core::slice::from_raw_parts(dah.pointer::<u8>(), self.buffer.len()) 
+                    };
+                    self.inner.write_packet(&buf[start..end])?
+                } else {
+                    self.inner.write_packet(&self.buffer[start..end])?
+                }
+            } else {
+                self.inner.write_packet(&self.buffer[start..end])?
+            };
 
             self.last_packet_full = bytes == packet_size;
             self.data_i += bytes;

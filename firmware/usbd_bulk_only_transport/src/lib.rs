@@ -9,6 +9,9 @@ pub use bulk_only_transport::{
     Error,
 };
 
+#[cfg(feature = "direct-read-hack")]
+pub use bulk_only_transport::direct_read;
+
 mod logging {
     pub use itm_logger::*;
 
