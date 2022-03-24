@@ -237,7 +237,8 @@ impl<B: UsbBus> BulkOnlyTransport<'_, B> {
             // logging is enabled or not it appears to sometimes work and sometimes not which makes
             // me think it's a timing issue. In the hardware example I'm testing with RTFM appears
             // to be clearing the 
-            self.read()?;
+            // -- disable for me --
+            // self.read()?;
         }
 
         Ok(())

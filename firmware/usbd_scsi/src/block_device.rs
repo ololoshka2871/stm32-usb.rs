@@ -14,6 +14,9 @@ pub enum BlockDeviceError {
 
     /// Address is invalid or out of range
     InvalidAddress,
+
+    /// Media not ready
+    NotReady,
 }
 
 pub trait BlockDevice {
@@ -31,5 +34,8 @@ pub trait BlockDevice {
     fn max_lba(&self) -> u32;
 
     /// Get Write-protect status
-    fn is_write_protected(&self) -> bool;
+    fn is_write_protected(&self) -> bool { false }
+
+    /// Get Device ready status
+    fn is_ready(&self) -> bool { true }
 }

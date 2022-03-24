@@ -138,7 +138,13 @@ impl<B: UsbBus, BD: BlockDevice> Scsi<'_, B, BD> {
             // requests and nothing else, regardless of the response. There may be additional data
             // in the request that indicates you should respond CommandError and prepare sense
             // response data with more info but not looked in detail yet.
-            Command::TestUnitReady(_) => Done,
+            Command::TestUnitReady(_) => {
+                if self.block_device.is_ready() { 
+                    Done 
+                } else { 
+                    Err(Error::BlockDeviceError(BlockDeviceError::NotReady))?
+                }
+            },
 
             // Prevent the user removing the disk, not implemented. Just responding CommandOk sufficient
             // for flash based device.
@@ -363,6 +369,11 @@ impl<B: UsbBus, BD: BlockDevice> Scsi<'_, B, BD> {
             Error::BlockDeviceError(BlockDeviceError::InvalidAddress) => (
                 SenseKey::IllegalRequest,
                 AdditionalSenseCode::LogicalBlockAddressOutOfRange,
+            ),
+
+            Error::BlockDeviceError(BlockDeviceError::NotReady) => (
+                SenseKey::NotReady,
+                AdditionalSenseCode::NoAdditionalSenseInformation,
             ),
 
             Error::BulkOnlyTransportError(BulkOnlyTransportError::DataError) => (
