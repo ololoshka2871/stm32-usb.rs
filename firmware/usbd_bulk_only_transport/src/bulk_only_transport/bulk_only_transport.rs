@@ -114,6 +114,7 @@ pub enum TransferState {
 ///    is done. This is likely for devices where the reset might take a long (relative to poll rate) time.
 ///    This isn't implemented here.
 ///
+#[repr(C)] // field buffer mast be aligned of 4 bytes to safely pass pointer to C-code
 pub struct BulkOnlyTransport<'a, B: UsbBus> {
     inner: MscClass<'a, B>,
     
