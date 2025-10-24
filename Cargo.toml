@@ -1,0 +1,11 @@
+[workspace]
+members = [
+  "firmware/packing",
+  "firmware/uf2_block",
+  "firmware/uf2_util",
+  "firmware/usb_bootloader",
+  "firmware/usbd_bulk_only_transport",
+  "firmware/usbd_mass_storage",
+  "firmware/usbd_scsi"
+]
+resolver = "2"
